@@ -158,9 +158,9 @@ class Calculator
 			this.clear();
 		}
 		
-		if ( this.value === '0' )
+		if ( Number( this.value ) === 0 )
 		{
-			this.value = value;
+			this.value = ( ( this.value[0] === '-' ) ? '-' : '' ) + value;
 		}
 		else
 		{
@@ -200,6 +200,14 @@ class Calculator
 	 */
 	changeSign()
 	{
+		if (
+			!this.value
+			&& this.numberA
+		)
+		{
+			this.value = this.numberA.toString();
+		}
+		
 		if ( this.value[0] === '-' )
 		{
 			this.value = this.value.substr( 1 );
