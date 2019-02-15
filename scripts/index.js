@@ -1,3 +1,5 @@
+// @ts-check
+
 import Calculator from './Calculator.js';
 import Controls from './Controls.js';
 import Display from './Display.js';

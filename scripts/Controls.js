@@ -1,4 +1,7 @@
-import Calculator from './Calculator.js';
+// @ts-check
+/**
+ * @typedef { import( './Calculator' ).default } Calculator
+ */
 
 /**
  * Элементы управления калькулятором.
@@ -23,8 +26,7 @@ class Controls
 		 */
 		const onButtonClick = ( event ) =>
 		{
-			/** @type {HTMLButtonElement} */
-			const target = event.target;
+			const target = /** @type {HTMLButtonElement} */( event.target );
 			const action = target.dataset.action;
 			const value = target.dataset.value;
 			this.doAction( action, value );

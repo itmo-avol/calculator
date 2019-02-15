@@ -1,4 +1,7 @@
-import Display from './Display.js';
+// @ts-check
+/**
+ * @typedef { import( './Display' ).default } Display
+ */
 
 /**
  * Возможные значения текущей операции.
