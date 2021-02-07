@@ -1,10 +1,10 @@
 // @ts-check
 /**
- * @typedef { import( './Display' ).default } Display
+ * @typedef { import( './Display' ).Display } Display
  */
 
 /**
- * Возможные значения текущей операции.
+ * Возможные значения текущей операции
  */
 const Operation = {
 	NONE: 0,
@@ -15,41 +15,47 @@ const Operation = {
 };
 
 /**
- * Калькулятор.
+ * Калькулятор
  */
-class Calculator
+export class Calculator
 {
+	/** @type {Display} */
+	display;
+	/** @type {number} */
+	operation = Operation.NONE;
+	/** @type {number} */
+	numberA = 0;
+	/** @type {number} */
+	numberB = NaN;
+	/** @type {string} */
+	value = '';
+	
 	/**
-	 * Калькулятор.
+	 * Калькулятор
 	 * 
-	 * @param {Display} display Экран для отображения результата.
+	 * @param {Display} display Экран для отображения результата
 	 */
 	constructor ( display )
 	{
-		/** @type {Display} */
 		this.display = display;
 		this.clear();
 	}
 	
 	/**
-	 * Сбрасывает состояние калькулятора.
+	 * Сбрасывает состояние калькулятора
 	 */
 	clear()
 	{
-		/** @type {number} */
 		this.operation = Operation.NONE;
-		/** @type {number} */
 		this.numberA = 0;
-		/** @type {number} */
 		this.numberB = NaN;
-		/** @type {string} */
 		this.value = '';
 		
 		this.display.setValue( '0' );
 	}
 	
 	/**
-	 * Удаляет последний символ.
+	 * Удаляет последний символ
 	 */
 	backspace()
 	{
@@ -66,10 +72,11 @@ class Calculator
 	}
 	
 	/**
-	 * Обновляет отображаемое значение.
+	 * Обновляет отображаемое значение
 	 */
 	updateDisplay()
 	{
+		/** @type {number} */
 		let numberToDisplay;
 		
 		if ( isNaN( this.numberA ) )
@@ -91,7 +98,7 @@ class Calculator
 	}
 	
 	/**
-	 * Выполняет вычисление текущего значения, если необходимо.
+	 * Выполняет вычисление текущего значения, если необходимо
 	 */
 	calculate()
 	{
@@ -142,9 +149,9 @@ class Calculator
 	}
 	
 	/**
-	 * Добавляет новую цифру к значению калькулятора.
+	 * Добавляет новую цифру к значению калькулятора
 	 * 
-	 * @param {string} value Добавляемая цифра.
+	 * @param {string} value Добавляемая цифра
 	 */
 	addDigit( value )
 	{
@@ -161,6 +168,7 @@ class Calculator
 			this.clear();
 		}
 		
+		// TODO: Переделать
 		if ( Number( this.value ) === 0 )
 		{
 			this.value = ( ( this.value[0] === '-' ) ? '-' : '' ) + value;
@@ -183,11 +191,11 @@ class Calculator
 	}
 	
 	/**
-	 * Ставит десятичный разделитель.
+	 * Ставит десятичный разделитель
 	 */
 	period()
 	{
-		if ( this.value.indexOf( '.' ) === -1 )
+		if ( !this.value.includes( '.' ) )
 		{
 			this.value += (
 				( this.value.length === 0 )
@@ -199,10 +207,11 @@ class Calculator
 	}
 	
 	/**
-	 * Изменяет знак числа.
+	 * Изменяет знак числа
 	 */
 	changeSign()
 	{
+		// TODO: Схлопывается при пустом вводе (смена - на +)
 		if (
 			!this.value
 			&& this.numberA
@@ -238,7 +247,7 @@ class Calculator
 	}
 	
 	/**
-	 * Вычисляет квадратный корень.
+	 * Вычисляет квадратный корень
 	 */
 	squareRoot()
 	{
@@ -248,7 +257,7 @@ class Calculator
 	}
 	
 	/**
-	 * Выполняет сложение.
+	 * Выполняет сложение
 	 */
 	addition()
 	{
@@ -257,7 +266,7 @@ class Calculator
 	}
 	
 	/**
-	 * Выполняет вычитание.
+	 * Выполняет вычитание
 	 */
 	subtraction()
 	{
@@ -266,7 +275,7 @@ class Calculator
 	}
 	
 	/**
-	 * Выполняет умножение.
+	 * Выполняет умножение
 	 */
 	multiplication()
 	{
@@ -275,7 +284,7 @@ class Calculator
 	}
 	
 	/**
-	 * Выполняет деление.
+	 * Выполняет деление
 	 */
 	division()
 	{
@@ -283,7 +292,3 @@ class Calculator
 		this.operation = Operation.DIVISION;
 	}
 }
-
-export {
-	Calculator as default,
-};

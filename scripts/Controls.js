@@ -1,48 +1,42 @@
 // @ts-check
 /**
- * @typedef { import( './Calculator' ).default } Calculator
+ * @typedef { import( './Calculator' ).Calculator } Calculator
  */
 
 /**
- * Элементы управления калькулятором.
+ * Элементы управления калькулятором
  */
-class Controls
+export class Controls
 {
+	/** @type {Calculator} */
+	calculator;
+	/** @type {NodeList} */
+	buttons;
+	
 	/**
-	 * Элементы управления калькулятором.
+	 * Элементы управления калькулятором
 	 * 
-	 * @param {Calculator} calculator Связанный калькулятор.
-	 * @param {NodeList} buttons Элементы управления.
+	 * @param {Calculator} calculator Связанный калькулятор
+	 * @param {NodeList} buttons Элементы управления
 	 */
 	constructor( calculator, buttons )
 	{
-		/** @type {Calculator} */
 		this.calculator = calculator;
-		/** @type {NodeList} */
 		this.buttons = buttons;
 		
-		/**
-		 * @param {Event} event 
-		 */
-		const onButtonClick = ( event ) =>
-		{
-			const target = /** @type {HTMLButtonElement} */( event.target );
-			const action = target.dataset.action;
-			const value = target.dataset.value;
-			this.doAction( action, value );
-		}
+		this._handleButtonClick = this._handleButtonClick.bind( this );
 		
 		for ( const button of buttons )
 		{
-			button.addEventListener( 'click', onButtonClick );
+			button.addEventListener( 'click', this._handleButtonClick );
 		}
 	}
 	
 	/**
-	 * Выполняет указанное действие.
+	 * Выполняет указанное действие
 	 * 
-	 * @param {string} action Выполняемое действие.
-	 * @param {string} [value] Значение для действия.
+	 * @param {string} action Выполняемое действие
+	 * @param {string} [value] Значение для действия
 	 */
 	doAction( action, value )
 	{
@@ -71,8 +65,9 @@ class Controls
 			case 'digit':
 				if ( !value )
 				{
-					throw new Error( 'Digit action should be with value' );
+					throw new Error( 'Digit action should be used with a value' );
 				}
+				
 				this.calculator.addDigit( value );
 				break;
 			
@@ -100,8 +95,24 @@ class Controls
 				throw new Error( 'Unknown action' );
 		}
 	}
+	
+	/**
+	 * Обработчик нажатия на кнопки
+	 * 
+	 * @private
+	 * @param {Event} event
+	 */
+	_handleButtonClick( event )
+	{
+		const target = event.target;
+		
+		if ( !( target instanceof HTMLButtonElement ) )
+		{
+			return;
+		}
+		
+		const action = target.dataset.action || '';
+		const value = target.dataset.value;
+		this.doAction( action, value );
+	}
 }
-
-export {
-	Controls as default,
-};

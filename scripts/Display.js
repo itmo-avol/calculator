@@ -1,25 +1,27 @@
 // @ts-check
 
 /**
- * Экран для отображения результата.
+ * Экран для отображения результата
  */
-class Display
+export class Display
 {
+	/** @type {HTMLElement} */
+	output;
+	
 	/**
-	 * Экран для отображения результата.
+	 * Экран для отображения результата
 	 * 
-	 * @param {HTMLElement} output Элемент для вывода результата.
+	 * @param {HTMLElement} output Элемент для вывода результата
 	 */
 	constructor( output )
 	{
-		/** @type {HTMLElement} */
 		this.output = output;
 	}
 	
 	/**
-	 * Устанавливает значение.
+	 * Устанавливает значение
 	 * 
-	 * @param {string} value Новое значение.
+	 * @param {string} value Новое значение
 	 */
 	setValue( value )
 	{
@@ -27,9 +29,9 @@ class Display
 	}
 	
 	/**
-	 * Подготавливает число к отображения на экране.
+	 * Подготавливает число к отображения на экране
 	 * 
-	 * @param {number} number Число для отображения.
+	 * @param {number} number Число для отображения
 	 * @returns {string}
 	 */
 	prepare( number )
@@ -38,7 +40,3 @@ class Display
 			.replace( /(?:\.0*|(\.\d+?)0*)$/, '$1' );
 	}
 }
-
-export {
-	Display as default,
-};
