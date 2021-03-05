@@ -19,7 +19,7 @@ main > div.display > output
 	padding: 1vw;
 	
 	font-size: 10vw;
-	font-family: Ubuntu Mono, Consolas, monospace;
+	font-family: "SFMono-Regular", "Menlo", "Monaco", "Ubuntu Mono", "Consolas", monospace;
 	line-height: 1;
 	text-align: right;
 	white-space: nowrap;

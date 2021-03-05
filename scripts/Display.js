@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * Экран для отображения результата
  */
@@ -7,15 +5,19 @@ export class Display
 {
 	/** @type {HTMLElement} */
 	output;
+	/** @type {number} */
+	maxChars;
 	
 	/**
 	 * Экран для отображения результата
 	 * 
 	 * @param {HTMLElement} output Элемент для вывода результата
+	 * @param {number} maxChars Максимальное количество символов для отображения
 	 */
-	constructor( output )
+	constructor( output, maxChars )
 	{
 		this.output = output;
+		this.maxChars = maxChars;
 	}
 	
 	/**
@@ -25,18 +27,21 @@ export class Display
 	 */
 	setValue( value )
 	{
-		this.output.textContent = value;
-	}
-	
-	/**
-	 * Подготавливает число к отображения на экране
-	 * 
-	 * @param {number} number Число для отображения
-	 * @returns {string}
-	 */
-	prepare( number )
-	{
-		return number.toPrecision( 11 )
-			.replace( /(?:\.0*|(\.\d+?)0*)$/, '$1' );
+		if ( value.length <= this.maxChars )
+		{
+			this.output.textContent = value;
+			
+			return;
+		}
+		const asNumber = Number( value );
+		
+		if ( isNaN( asNumber ) )
+		{
+			this.output.textContent = 'NaN';
+			
+			return;
+		}
+		
+		this.output.textContent = asNumber.toPrecision( this.maxChars - 2 );
 	}
 }

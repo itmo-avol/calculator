@@ -1,10 +1,16 @@
-// @ts-check
 /**
  * @typedef { import( './Display' ).Display } Display
+ */
+/**
+ * @typedef { import( './Value' ).ValueConstructor } ValueConstructor
+ */
+/**
+ * @typedef { import( './Value' ).Value } Value
  */
 
 /**
  * Возможные значения текущей операции
+ * @enum {number}
  */
 const Operation = {
 	NONE: 0,
@@ -21,24 +27,37 @@ export class Calculator
 {
 	/** @type {Display} */
 	display;
+	/** @type {ValueConstructor} */
+	Value;
 	/** @type {number} */
 	operation = Operation.NONE;
-	/** @type {number} */
-	numberA = 0;
-	/** @type {number} */
-	numberB = NaN;
-	/** @type {string} */
-	value = '';
+	/** @type {Value} */
+	value;
+	/** @type {Value | null} */
+	memory = null;
+	/** @type {boolean} */
+	edit = true;
 	
 	/**
 	 * Калькулятор
 	 * 
 	 * @param {Display} display Экран для отображения результата
+	 * @param {ValueConstructor} Value Конструктор объектов значения
 	 */
-	constructor ( display )
+	constructor( display, Value )
 	{
 		this.display = display;
+		this.Value = Value;
+		this.value = new Value();
 		this.clear();
+	}
+	
+	/**
+	 * Обновляет отображаемое значение
+	 */
+	updateDisplay()
+	{
+		this.display.setValue( String( this.value ) );
 	}
 	
 	/**
@@ -47,11 +66,11 @@ export class Calculator
 	clear()
 	{
 		this.operation = Operation.NONE;
-		this.numberA = 0;
-		this.numberB = NaN;
-		this.value = '';
+		this.value = new this.Value();
+		this.memory = null;
+		this.edit = true;
 		
-		this.display.setValue( '0' );
+		this.updateDisplay();
 	}
 	
 	/**
@@ -59,42 +78,9 @@ export class Calculator
 	 */
 	backspace()
 	{
-		this.value = this.value.slice( 0, -1 );
-		
-		if ( this.value.length === 0 )
-		{
-			this.display.setValue( '0' );
-		}
-		else
-		{
-			this.display.setValue( this.value );
-		}
-	}
-	
-	/**
-	 * Обновляет отображаемое значение
-	 */
-	updateDisplay()
-	{
-		/** @type {number} */
-		let numberToDisplay;
-		
-		if ( isNaN( this.numberA ) )
-		{
-			numberToDisplay = 0;
-		}
-		else if ( isNaN( this.numberB ) )
-		{
-			numberToDisplay = this.numberA;
-		}
-		else
-		{
-			numberToDisplay = this.numberB;
-		}
-		
-		this.display.setValue(
-			this.display.prepare( numberToDisplay )
-		);
+		this._prepareEdit();
+		this.value.set( String( this.value ).slice( 0, -1 ) );
+		this.updateDisplay();
 	}
 	
 	/**
@@ -102,18 +88,13 @@ export class Calculator
 	 */
 	calculate()
 	{
-		let numberA = this.numberA;
-		const numberB = this.numberB;
-		
-		if (
-			isNaN( numberA )
-			|| isNaN( numberB )
-		)
+		if ( !this.memory )
 		{
-			this.value = '';
-			
 			return;
 		}
+		
+		let numberA = Number( this.memory );
+		const numberB = Number( this.value );
 		
 		switch ( this.operation )
 		{
@@ -140,10 +121,10 @@ export class Calculator
 				throw new Error( 'Unknown operation' );
 		}
 		
-		this.numberA = numberA;
-		this.numberB = NaN;
 		this.operation = Operation.NONE;
-		this.value = '';
+		this.edit = false;
+		this.value = new this.Value( numberA );
+		this.memory = null;
 		
 		this.updateDisplay();
 	}
@@ -160,34 +141,15 @@ export class Calculator
 			throw new Error( `Incorrect number value "${value}".` );
 		}
 		
-		if (
-			!this.value
-			&& ( this.operation === Operation.NONE )
-		)
-		{
-			this.clear();
-		}
+		this._prepareEdit();
 		
-		// TODO: Переделать
-		if ( Number( this.value ) === 0 )
-		{
-			this.value = ( ( this.value[0] === '-' ) ? '-' : '' ) + value;
-		}
-		else
-		{
-			this.value += value;
-		}
+		// Чтобы не потерять -0
+		const negative = this.value.getNegative();
 		
-		this.display.setValue( this.value );
+		this.value.set( String( this.value ) + value );
+		this.value.setNegative( negative );
 		
-		if ( this.operation === Operation.NONE )
-		{
-			this.numberA = Number( this.value );
-		}
-		else
-		{
-			this.numberB = Number( this.value );
-		}
+		this.updateDisplay();
 	}
 	
 	/**
@@ -195,15 +157,9 @@ export class Calculator
 	 */
 	period()
 	{
-		if ( !this.value.includes( '.' ) )
-		{
-			this.value += (
-				( this.value.length === 0 )
-				? '0.'
-				: '.'
-			);
-			this.display.setValue( this.value );
-		}
+		this._prepareEdit();
+		this.value.setDot();
+		this.updateDisplay();
 	}
 	
 	/**
@@ -211,39 +167,9 @@ export class Calculator
 	 */
 	changeSign()
 	{
-		// TODO: Схлопывается при пустом вводе (смена - на +)
-		if (
-			!this.value
-			&& this.numberA
-		)
-		{
-			this.value = this.numberA.toString();
-		}
-		
-		if ( this.value[0] === '-' )
-		{
-			this.value = this.value.substr( 1 );
-		}
-		else
-		{
-			this.value = '-' + this.value;
-		}
-		
-		this.display.setValue( this.value );
-		
-		if ( this.value === '-' )
-		{
-			return;
-		}
-		
-		if ( this.operation === Operation.NONE )
-		{
-			this.numberA = Number( this.value );
-		}
-		else
-		{
-			this.numberB = Number( this.value );
-		}
+		this.value.setNegative( !this.value.getNegative() );
+		this.edit = true;
+		this.updateDisplay();
 	}
 	
 	/**
@@ -252,7 +178,9 @@ export class Calculator
 	squareRoot()
 	{
 		this.calculate();
-		this.numberA = Math.sqrt( this.numberA );
+		this.value = new this.Value(
+			Math.sqrt( Number( this.value ) ),
+		);
 		this.updateDisplay();
 	}
 	
@@ -262,6 +190,9 @@ export class Calculator
 	addition()
 	{
 		this.calculate();
+		this.memory = this.value;
+		this.value = new this.Value();
+		this.edit = true;
 		this.operation = Operation.ADDITION;
 	}
 	
@@ -271,6 +202,9 @@ export class Calculator
 	subtraction()
 	{
 		this.calculate();
+		this.memory = this.value;
+		this.value = new this.Value();
+		this.edit = true;
 		this.operation = Operation.SUBTRACTION;
 	}
 	
@@ -280,6 +214,9 @@ export class Calculator
 	multiplication()
 	{
 		this.calculate();
+		this.memory = this.value;
+		this.value = new this.Value();
+		this.edit = true;
 		this.operation = Operation.MULTIPLICATION;
 	}
 	
@@ -289,6 +226,25 @@ export class Calculator
 	division()
 	{
 		this.calculate();
+		this.memory = this.value;
+		this.value = new this.Value();
+		this.edit = true;
 		this.operation = Operation.DIVISION;
+	}
+	
+	/**
+	 * Подготавливает к редактированию значения на экране
+	 * 
+	 * @private
+	 */
+	_prepareEdit()
+	{
+		if (
+			!this.edit
+			&& ( this.operation === Operation.NONE )
+		)
+		{
+			this.clear();
+		}
 	}
 }
