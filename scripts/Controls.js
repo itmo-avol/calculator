@@ -91,7 +91,7 @@ export class Controls
 				break;
 			
 			default:
-				throw new Error( 'Unknown action' );
+				throw new Error( `Unknown action "${action}"` );
 		}
 	}
 	
