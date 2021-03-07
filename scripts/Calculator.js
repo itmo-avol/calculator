@@ -49,7 +49,8 @@ export class Calculator
 		this.display = display;
 		this.Value = Value;
 		this.value = new Value();
-		this.clear();
+		
+		this.updateDisplay();
 	}
 	
 	/**
