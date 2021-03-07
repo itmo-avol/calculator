@@ -9,8 +9,6 @@ export class Controls
 {
 	/** @type {Calculator} */
 	calculator;
-	/** @type {NodeList} */
-	buttons;
 	
 	/**
 	 * Элементы управления калькулятором
@@ -21,7 +19,6 @@ export class Controls
 	constructor( calculator, buttons )
 	{
 		this.calculator = calculator;
-		this.buttons = buttons;
 		
 		this._handleButtonClick = this._handleButtonClick.bind( this );
 		
