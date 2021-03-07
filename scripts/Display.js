@@ -33,6 +33,7 @@ export class Display
 			
 			return;
 		}
+		
 		const asNumber = Number( value );
 		
 		if ( isNaN( asNumber ) )
@@ -42,6 +43,9 @@ export class Display
 			return;
 		}
 		
-		this.output.textContent = asNumber.toPrecision( this.maxChars - 2 );
+		// Количество символов в числе, помимо чисел ('-', '+', 'e').
+		const nonNumericCharsCount = 3;
+		
+		this.output.textContent = asNumber.toPrecision( this.maxChars - nonNumericCharsCount );
 	}
 }
