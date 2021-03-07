@@ -16,7 +16,7 @@ export class Controls
 	 * Элементы управления калькулятором
 	 * 
 	 * @param {Calculator} calculator Связанный калькулятор
-	 * @param {NodeList} buttons Элементы управления
+	 * @param {NodeListOf<Element>} buttons Элементы управления
 	 */
 	constructor( calculator, buttons )
 	{
