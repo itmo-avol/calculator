@@ -3,18 +3,16 @@
  */
 export class Display
 {
-	/** @type {HTMLElement} */
-	output;
-	/** @type {number} */
-	maxChars;
+	private output: HTMLElement;
+	private maxChars: number;
 	
 	/**
 	 * Экран для отображения результата
 	 * 
-	 * @param {HTMLElement} output Элемент для вывода результата
-	 * @param {number} maxChars Максимальное количество символов для отображения
+	 * @param output Элемент для вывода результата
+	 * @param maxChars Максимальное количество символов для отображения
 	 */
-	constructor( output, maxChars )
+	constructor( output: HTMLElement, maxChars: number )
 	{
 		this.output = output;
 		this.maxChars = maxChars;
@@ -23,9 +21,9 @@ export class Display
 	/**
 	 * Устанавливает значение
 	 * 
-	 * @param {string} value Новое значение
+	 * @param value Новое значение
 	 */
-	setValue( value )
+	setValue( value: string )
 	{
 		if ( value.length <= this.maxChars )
 		{

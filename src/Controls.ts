@@ -1,22 +1,19 @@
-/**
- * @typedef { import( './Calculator' ).Calculator } Calculator
- */
+import { Calculator } from './Calculator.js';
 
 /**
  * Элементы управления калькулятором
  */
 export class Controls
 {
-	/** @type {Calculator} */
-	calculator;
+	calculator: Calculator;
 	
 	/**
 	 * Элементы управления калькулятором
 	 * 
-	 * @param {Calculator} calculator Связанный калькулятор
-	 * @param {NodeListOf<Element>} buttons Элементы управления
+	 * @param calculator Связанный калькулятор
+	 * @param buttons Элементы управления
 	 */
-	constructor( calculator, buttons )
+	constructor( calculator: Calculator, buttons: NodeListOf<Element> )
 	{
 		this.calculator = calculator;
 		
@@ -31,10 +28,10 @@ export class Controls
 	/**
 	 * Выполняет указанное действие
 	 * 
-	 * @param {string} action Выполняемое действие
-	 * @param {string} [value] Значение для действия
+	 * @param action Выполняемое действие
+	 * @param value Значение для действия
 	 */
-	doAction( action, value )
+	doAction( action: string, value?: string )
 	{
 		switch ( action )
 		{
@@ -94,11 +91,8 @@ export class Controls
 	
 	/**
 	 * Обработчик нажатия на кнопки
-	 * 
-	 * @private
-	 * @param {Event} event
 	 */
-	_handleButtonClick( event )
+	private _handleButtonClick( event: Event )
 	{
 		const target = event.target;
 		

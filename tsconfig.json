@@ -1,9 +1,7 @@
 {
 	"compilerOptions": {
-		"checkJs": true,
 		"module": "esnext",
 		"target": "esnext",
-		"noEmit": true,
 		
 		"strict": true,
 		
@@ -11,13 +9,22 @@
 		"noUnusedParameters": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		
+		"sourceMap": true,
+		"inlineSources": true,
+		"removeComments": true,
+		
+		"outDir": "./scripts/"
 	},
 	"exclude": [
 		"node_modules",
 		"**/node_modules/*"
 	],
 	"include": [
-		"scripts/*.js"
+		"src/*.ts"
 	]
 }

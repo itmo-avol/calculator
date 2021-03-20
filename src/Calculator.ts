@@ -1,16 +1,8 @@
-/**
- * @typedef { import( './Display' ).Display } Display
- */
-/**
- * @typedef { import( './Value' ).ValueConstructor } ValueConstructor
- */
-/**
- * @typedef { import( './Value' ).Value } Value
- */
+import type { Display } from './Display.js';
+import type { Value, ValueConstructor } from './Value.js';
 
 /**
  * Возможные значения текущей операции
- * @enum {number}
  */
 const Operation = {
 	NONE: 0,
@@ -18,33 +10,29 @@ const Operation = {
 	SUBTRACTION: 2,
 	MULTIPLICATION: 3,
 	DIVISION: 4,
-};
+} as const;
+
+type Operation = (typeof Operation)[keyof typeof Operation];
 
 /**
  * Калькулятор
  */
 export class Calculator
 {
-	/** @type {Display} */
-	display;
-	/** @type {ValueConstructor} */
-	Value;
-	/** @type {number} */
-	operation = Operation.NONE;
-	/** @type {Value} */
-	value;
-	/** @type {Value | null} */
-	memory = null;
-	/** @type {boolean} */
-	edit = true;
+	private display: Display;
+	private Value: ValueConstructor;
+	private operation: Operation = Operation.NONE;
+	private value: Value;
+	private memory: Value | null = null;
+	private edit: boolean = true;
 	
 	/**
 	 * Калькулятор
 	 * 
-	 * @param {Display} display Экран для отображения результата
-	 * @param {ValueConstructor} Value Конструктор объектов значения
+	 * @param display Экран для отображения результата
+	 * @param Value Конструктор объектов значения
 	 */
-	constructor( display, Value )
+	constructor( display: Display, Value: ValueConstructor )
 	{
 		this.display = display;
 		this.Value = Value;
@@ -133,9 +121,9 @@ export class Calculator
 	/**
 	 * Добавляет новую цифру к значению калькулятора
 	 * 
-	 * @param {string} value Добавляемая цифра
+	 * @param value Добавляемая цифра
 	 */
-	addDigit( value )
+	addDigit( value: string )
 	{
 		if ( !/^\d$/.test( value ) )
 		{
@@ -235,10 +223,8 @@ export class Calculator
 	
 	/**
 	 * Подготавливает к редактированию значения на экране
-	 * 
-	 * @private
 	 */
-	_prepareEdit()
+	private _prepareEdit()
 	{
 		if (
 			!this.edit

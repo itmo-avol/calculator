@@ -1,27 +1,19 @@
 /**
- * @typedef {typeof Value} ValueConstructor
- */
-
-/**
  * Числовое значение
  */
 export class Value
 {
-	/** @type {number} */
-	value = 0;
-	/** @type {number} */
-	fractionDigits = 0;
-	/** @type {boolean} */
-	negative = false;
-	/** @type {boolean} */
-	withDot = false;
+	private value: number = 0;
+	private fractionDigits: number = 0;
+	private negative: boolean = false;
+	private withDot: boolean = false;
 	
 	/**
 	 * Создаёт числовое значение
 	 * 
-	 * @param {string | number} [value] Новое значение
+	 * @param value Новое значение
 	 */
-	constructor( value )
+	constructor( value?: string | number )
 	{
 		if ( value )
 		{
@@ -64,9 +56,9 @@ export class Value
 	/**
 	 * Устанавливает значение
 	 * 
-	 * @param {string | number} value Новое значение
+	 * @param value Новое значение
 	 */
-	set( value )
+	set( value: string | number )
 	{
 		if ( typeof value === 'number' )
 		{
@@ -89,9 +81,9 @@ export class Value
 	/**
 	 * Устанавливает знак числа: отрицательное или нет
 	 * 
-	 * @param {boolean} state Число отрицательное?
+	 * @param state Число отрицательное?
 	 */
-	setNegative( state = true )
+	setNegative( state: boolean = true )
 	{
 		this.negative = state;
 	}
@@ -99,9 +91,9 @@ export class Value
 	/**
 	 * Устанавливает наличие точки в числе
 	 * 
-	 * @param {boolean} state Число с точкой?
+	 * @param state Число с точкой?
 	 */
-	setDot( state = true )
+	setDot( state: boolean = true )
 	{
 		this.withDot = state;
 	}
@@ -109,10 +101,9 @@ export class Value
 	/**
 	 * Устанавливает значение из числа
 	 * 
-	 * @private
-	 * @param {number} value Новое значение
+	 * @param value Новое значение
 	 */
-	_setFromNumber( value )
+	private _setFromNumber( value: number )
 	{
 		const asString = String( value );
 		const dotIndex = asString.indexOf( '.' );
@@ -135,10 +126,9 @@ export class Value
 	/**
 	 * Устанавливает значение из строки
 	 * 
-	 * @private
-	 * @param {string} value Новое значение
+	 * @param value Новое значение
 	 */
-	_setFromString( value )
+	private _setFromString( value: string )
 	{
 		if ( value === '' )
 		{
@@ -167,3 +157,5 @@ export class Value
 		this.value = Math.abs( Number( value ) );
 	}
 }
+
+export type ValueConstructor = typeof Value;
